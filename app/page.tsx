@@ -9,7 +9,6 @@ import { useState, useRef } from "react";
 import { 
   FileText, 
   Users, 
-  Shield, 
   TrendingUp,
   Music,
   Disc3,
@@ -76,9 +75,10 @@ export default function Home() {
           <FeaturedCard
             title={mostRecentIP.name}
             genre="Audio IP"
-            collaborations="1"
             gradient="gradient-card-1"
             audioUrl={`https://ipfs.io/ipfs/${mostRecentIP.cid}`}
+            priceAmount={mostRecentIP.priceAmount}
+            priceNetwork={mostRecentIP.priceNetwork}
           />
         ) : (
           <Link href="/store">
@@ -86,7 +86,6 @@ export default function Home() {
               <FeaturedCard
                 title="Register Your First IP"
                 genre="Get Started"
-                collaborations="0"
                 gradient="gradient-card-1"
               />
             </div>
@@ -94,24 +93,16 @@ export default function Home() {
         )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <StatCard
             label="Registered IP dSFTs"
-            value={registeredIPs.length.toString()}
+            value={registeredIPs.length}
             icon={FileText}
-            trend={{ value: registeredIPs.length > 0 ? "100" : "0", isPositive: true }}
-          />
-          <StatCard
-            label="Creator Credentials"
-            value="3"
-            icon={Shield}
-            trend={{ value: "8", isPositive: true }}
           />
           <StatCard
             label="Profile Views"
-            value="1254"
+            value={registeredIPs.reduce((total, ip) => total + ip.profileViews, 0)}
             icon={TrendingUp}
-            trend={{ value: "23", isPositive: true }}
           />
         </div>
 
@@ -122,7 +113,7 @@ export default function Home() {
             items={registeredIPs.length > 0 ? registeredIPs.slice().reverse().map(ip => ({
               id: ip.id,
               title: ip.name,
-              artist: `Created ${new Date(ip.createdAt).toLocaleDateString()}`,
+              artist: `💰 ${ip.priceAmount} ${ip.priceNetwork} • Created ${new Date(ip.createdAt).toLocaleDateString()}`,
               duration: `${Math.floor(ip.duration / 60)}:${(ip.duration % 60).toString().padStart(2, '0')}`,
               audioUrl: `https://ipfs.io/ipfs/${ip.cid}`
             })) : []}

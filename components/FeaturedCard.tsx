@@ -5,19 +5,21 @@ import { useState, useRef } from "react";
 interface FeaturedCardProps {
   title: string;
   genre: string;
-  collaborations: string;
   imageUrl?: string;
   gradient?: string;
   audioUrl?: string;
+  priceAmount?: string;
+  priceNetwork?: string;
 }
 
 export default function FeaturedCard({
   title,
   genre,
-  collaborations,
   imageUrl,
   gradient = "gradient-card-1",
-  audioUrl
+  audioUrl,
+  priceAmount,
+  priceNetwork
 }: FeaturedCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -74,7 +76,11 @@ export default function FeaturedCard({
         
         <div className="mb-6">
           <p className="text-sm opacity-90">Genre: {genre}</p>
-          <p className="text-sm opacity-90">Collaborations: {collaborations}</p>
+          {priceAmount && priceNetwork && (
+            <p className="text-lg font-bold text-white mt-2">
+              Price: <span className="text-white">{priceAmount} {priceNetwork}</span>
+            </p>
+          )}
         </div>
 
 

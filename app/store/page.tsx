@@ -32,6 +32,19 @@ type FaucetChain = typeof base | typeof baseSepolia | typeof avalanche | typeof 
 
 const SUPPORTED_CHAINS: FaucetChain[] = [base, baseSepolia, avalanche, avalancheFuji];
 
+const PRICING_NETWORKS = [
+  { value: "ETH", label: "Ethereum (ETH)", symbol: "ETH" },
+  { value: "USDT", label: "Tether (USDT)", symbol: "USDT" },
+  { value: "USDC", label: "USD Coin (USDC)", symbol: "USDC" },
+  { value: "BTC", label: "Bitcoin (BTC)", symbol: "BTC" },
+  { value: "BNB", label: "Binance Coin (BNB)", symbol: "BNB" },
+  { value: "ADA", label: "Cardano (ADA)", symbol: "ADA" },
+  { value: "SOL", label: "Solana (SOL)", symbol: "SOL" },
+  { value: "MATIC", label: "Polygon (MATIC)", symbol: "MATIC" },
+  { value: "DOT", label: "Polkadot (DOT)", symbol: "DOT" },
+  { value: "AVAX", label: "Avalanche (AVAX)", symbol: "AVAX" }
+];
+
 export default function AudioRecorder() {
     const { isConnected, address } = useAccount();
     const { addRegisteredIP } = useIP();
@@ -61,11 +74,13 @@ export default function AudioRecorder() {
     const [recordingTime, setRecordingTime] = useState(0);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
+    const [priceNetwork, setPriceNetwork] = useState("ETH");
+    const [priceAmount, setPriceAmount] = useState("");
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
     const timerRef = useRef<number | null>(null);
-    const [tokenName, setTokenName] = useState<string>("");
-    const [tokenDescription, setTokenDescription] = useState<string>("");
+    const [tokenName, setTokenName] = useState("");
+    const [tokenDescription, setTokenDescription] = useState("");
 
   // Sync selected chain to connected wallet network
   useEffect(() => {
@@ -207,6 +222,9 @@ export default function AudioRecorder() {
         createdAt: new Date().toISOString(),
         duration: recordingTime,
         size: Math.round((recordingTime * 96) / 1024), // Estimated size in KB
+        priceNetwork: priceNetwork,
+        priceAmount: priceAmount,
+        profileViews: Math.floor(Math.random() * 50 + 10), // Initial random views between 10-60
         tokenId: tx.hash, // Using transaction hash as token ID for now
         transactionHash: tx.hash
       };
@@ -220,7 +238,7 @@ export default function AudioRecorder() {
       setIsStoring(false);
       setTransactionStatus("");
     }
-  }, [isConnected, isMatching, provider, signer, uploadedFile, tokenName, tokenDescription, address, recordingTime, addRegisteredIP]);
+  }, [isConnected, isMatching, provider, signer, uploadedFile, tokenName, tokenDescription, address, recordingTime, priceNetwork, priceAmount, addRegisteredIP]);
 
   // Audio Recording Functions
   const startRecording = async () => {
@@ -631,13 +649,47 @@ export default function AudioRecorder() {
                                                 ></textarea>
                                                 <p className="text-xs text-gray-500 mt-1">This description will be permanently stored on the blockchain.</p>
                                             </div>
+                                            
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-300 mb-1">Price Network*</label>
+                                                <select
+                                                    value={priceNetwork}
+                                                    onChange={(e) => setPriceNetwork(e.target.value)}
+                                                    className="w-full bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-orange-500"
+                                                >
+                                                    {PRICING_NETWORKS.map((network) => (
+                                                        <option key={network.value} value={network.value} className="bg-[var(--card-background)] text-white">
+                                                            {network.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-300 mb-1">Price Amount*</label>
+                                                <div className="relative">
+                                                    <input
+                                                        type="number"
+                                                        value={priceAmount}
+                                                        onChange={(e) => setPriceAmount(e.target.value)}
+                                                        placeholder="0.00"
+                                                        step="0.01"
+                                                        min="0"
+                                                        className="w-full bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg px-3 py-2 pr-16 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                                                    />
+                                                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                                                        {PRICING_NETWORKS.find(n => n.value === priceNetwork)?.symbol}
+                                                    </span>
+                                                </div>
+                                                <p className="text-xs text-gray-500 mt-1">Set the price buyers will pay to purchase this IP.</p>
+                                            </div>
                                         </div>
                                     </div>
                                     
                                     {/* Tokenize Button */}
                                     <button
                                         onClick={handleTokenize}
-                                        disabled={isMinting || !isConnected || !isMatching}
+                                        disabled={isMinting || !isConnected || !isMatching || !tokenName.trim() || !tokenDescription.trim() || !priceAmount || parseFloat(priceAmount) <= 0}
                                         className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
                                         {isMinting || isStoring ? (
