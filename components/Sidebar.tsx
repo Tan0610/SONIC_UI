@@ -15,7 +15,7 @@ import {
 
 const sidebarItems = [
   { icon: Home, label: "Dashboard", href: "/" },
-  { icon: FileText, label: "Register IP", href: "/register" },
+  { icon: FileText, label: "Register IP", href: "/store" },
   { icon: Key, label: "Generate ZPK", href: "/generate" },
   { icon: Users, label: "Collaborations", href: "/collaborations" },
   { icon: BarChart3, label: "Analytics", href: "/analytics" },
@@ -29,16 +29,16 @@ export default function Sidebar() {
 
   return (
     <div className="w-64 h-screen bg-[var(--sidebar-background)] border-r border-[var(--border-color)] flex flex-col">
-      {/* Logo Section */}
+      {/* SONIC IP Logo Section */}
       <div className="p-6 border-b border-[var(--border-color)]">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">IP</span>
+        <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-sm">S</span>
           </div>
           <div>
-            <h1 className="text-white font-semibold text-lg">IP REGISTER</h1>
+            <h1 className="text-white font-semibold text-lg">SONIC IP</h1>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Search Bar */}
@@ -76,17 +76,8 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User Profile Section */}
-      <div className="p-4 border-t border-[var(--border-color)]">
-        <div className="flex items-center space-x-3 p-3 rounded-lg bg-[var(--card-background)]">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold text-sm">M</span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-white font-medium text-sm truncate">Michael</p>
-            <p className="text-gray-400 text-xs truncate">michael@example.com</p>
-          </div>
-        </div>
+      {/* Empty bottom section */}
+      <div className="p-4">
       </div>
     </div>
   );
