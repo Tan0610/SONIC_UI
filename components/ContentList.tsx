@@ -99,7 +99,7 @@ export default function ContentList({ title, items, type }: ContentListProps) {
             {/* Content Info */}
             <div className="flex-1 min-w-0">
               <h4 className="text-white font-medium text-sm truncate">{item.title}</h4>
-              <p className="text-gray-400 text-xs truncate">{item.artist}</p>
+              <p className="text-gray-300 text-xs truncate font-semibold">{item.artist}</p>
             </div>
 
             {/* Duration/Stats */}

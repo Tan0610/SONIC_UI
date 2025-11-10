@@ -10,6 +10,9 @@ export interface RegisteredIP {
   createdAt: string;
   duration: number;
   size: number;
+  priceNetwork: string;
+  priceAmount: string;
+  profileViews: number;
   tokenId?: string;
   transactionHash?: string;
 }

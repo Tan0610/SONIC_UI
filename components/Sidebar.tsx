@@ -4,24 +4,12 @@ import { usePathname } from "next/navigation";
 import { 
   Home, 
   FileText, 
-  Key, 
-  Users, 
-  BarChart3, 
-  Shield, 
-  Settings, 
-  HelpCircle,
   Search
 } from "lucide-react";
 
 const sidebarItems = [
   { icon: Home, label: "Dashboard", href: "/" },
   { icon: FileText, label: "Register Your IP", href: "/store" },
-  { icon: Key, label: "Generate ZPK", href: "/generate" },
-  { icon: Users, label: "Collaborations", href: "/collaborations" },
-  { icon: BarChart3, label: "Analytics", href: "/analytics" },
-  { icon: Shield, label: "Credentials", href: "/credentials" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-  { icon: HelpCircle, label: "Help", href: "/help" },
 ];
 
 export default function Sidebar() {
