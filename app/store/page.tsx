@@ -1,7 +1,5 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
-import Footer from "@/components/Footer";
+import DashboardLayout from "@/components/DashboardLayout";
 import { WalletConnect } from "@/components/walletConnect";
 import { useAccount, useSwitchChain, useChainId } from "wagmi";
 import { base, baseSepolia, avalanche, avalancheFuji } from "wagmi/chains";
@@ -11,6 +9,21 @@ import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/lib/contract";
 import { useEthersProvider, useEthersSigner } from "@/hooks/useEthers";
 import lighthouse from '@lighthouse-web3/sdk';
 import { audioTokenizationService } from "@/lib/audioTokenizationService";
+import { 
+  Mic, 
+  Square, 
+  Play, 
+  Upload, 
+  RefreshCw, 
+  CheckCircle, 
+  AlertCircle,
+  ExternalLink,
+  Zap
+} from "lucide-react";
+
+import Image from "next/image";
+import Link from "next/link";
+import Footer from "@/components/Footer";
 import "./styles.css";
 
 type FaucetChain = typeof base | typeof baseSepolia | typeof avalanche | typeof avalancheFuji;
@@ -309,75 +322,34 @@ export default function AudioRecorder() {
   }, [signer, storeSuccess]);
 
     return (
-        <div className="min-h-screen bg-white">
-            {/* Hero/Header */}
-            <section className="min-h-screen flex flex-col justify-between pb-10 md:pb-20">
-                <div className="w-full bg-white border-b border-gray-100 shadow-sm py-4">
-                    <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-                        <Link href="/">
-                            <div className="flex items-center">
-                                <Image
-                                    className="cursor-pointer"
-                                    src="/assets/logos/sonicip-logo.svg"
-                                    width={32}
-                                    height={32}
-                                    alt="Sonic IP Logo"
-                                />
-                                <span className="ml-2 text-xl font-bold">SonicIPChain</span>
-                                <span className="ml-2 text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">Beta</span>
-                            </div>
-                        </Link>
-                        <div className="hidden md:flex items-center space-x-6">
-                            <Link href="/" className="font-medium text-gray-700 hover:text-blue-600 transition-colors">Home</Link>
-                            <Link href="/about" className="font-medium text-gray-700 hover:text-blue-600 transition-colors">About</Link>
-                            <Link href="/profile" className="font-medium text-gray-700 hover:text-blue-600 transition-colors">My Audio</Link>
-                        </div>
-                        <div className="flex items-center">
-                            {!isConnected ? (
-                                <WalletConnect />
-                            ) : (
-                                <div className="flex items-center space-x-3">
-                                    <span className="text-sm font-medium px-3 py-1 bg-gray-50 border border-gray-200 rounded-full text-gray-700">
-                                        {address?.slice(0, 6)}...{address?.slice(-4)} 👋
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="container mx-auto px-4 md:px-16 mt-10">
-                    <div className="header-container">
-                        <h1 className="text-3xl md:text-4xl font-bold text-blue-700">
-                            Record Your Audio
-                        </h1>
-                        <p className="text-lg text-gray-600 mt-3 mb-5 max-w-2xl">
-                            Create, tokenize, and securely store your audio on the blockchain
-                        </p>
-                        <div className="flex items-start space-x-2 text-sm text-blue-600 bg-blue-50 px-4 py-3 rounded-md border border-blue-100">
-                            <svg className="w-5 h-5 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                            </svg>
-                            <div>
-                                <p className="font-medium">Security Guaranteed</p>
-                                <p className="mt-1">Your audio will be encrypted and stored securely on IPFS and the blockchain. Only you control who can access it.</p>
-                            </div>
+        <DashboardLayout>
+            <div className="space-y-6">
+                {/* Header Section */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-white mb-2">Record Your Audio</h1>
+                    <p className="text-gray-400 mb-6">Create, tokenize, and securely store your audio on the blockchain</p>
+                    
+                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 flex items-start space-x-3">
+                        <Zap className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
+                        <div>
+                            <p className="font-medium text-blue-400">Security Guaranteed</p>
+                            <p className="text-sm text-gray-300 mt-1">Your audio will be encrypted and stored securely on IPFS and the blockchain. Only you control who can access it.</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Network Warning */}
                 {isConnected && !isMatching && (
-                    <div className="w-full max-w-4xl mx-auto p-3 bg-yellow-50 border border-yellow-200 rounded-lg mb-8">
+                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
                         <div className="flex items-center justify-between">
-                            <p className="text-sm text-yellow-800 font-funnel-display">
+                            <p className="text-sm text-yellow-400">
                                 You are on the wrong network. Please switch to the expected chain.
                             </p>
                             <button
                                 onClick={() => switchChain({ chainId: selectedId })}
                                 disabled={isSwitching}
-                                className={`ml-3 px-3 py-1.5 rounded-md text-sm font-funnel-display font-semibold transition-colors ${
-                                    isSwitching ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-yellow-600 text-white hover:bg-yellow-700'
+                                className={`ml-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                                    isSwitching ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-yellow-600 text-white hover:bg-yellow-700'
                                 }`}
                             >
                                 {isSwitching ? 'Switching...' : 'Switch Network'}
@@ -387,352 +359,282 @@ export default function AudioRecorder() {
                 )}
 
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col items-center justify-center px-4 max-w-4xl mx-auto mt-6">
-                    {!isConnected ? (
-                        <div className="w-full text-center py-16 px-6 border border-blue-100 rounded-xl bg-gradient-to-b from-white to-blue-50 shadow-sm">
-                            <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-6">
-                                <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                            </div>
-                            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Connect Your Wallet</h2>
-                            <p className="text-gray-600 mb-8 max-w-md mx-auto">To create and tokenize your audio recordings, you need to connect your cryptocurrency wallet first.</p>
-                            <div className="flex justify-center">
-                                <WalletConnect />
-                            </div>
-                            <p className="text-xs text-gray-500 mt-8 max-w-sm mx-auto">By connecting your wallet, you agree to our Terms of Service and Privacy Policy.</p>
+                {!isConnected ? (
+                    <div className="bg-[var(--card-background)] border border-[var(--border-color)] rounded-xl p-8 text-center">
+                        <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-500/20 rounded-full mb-6">
+                            <svg className="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
                         </div>
-                    ) : (
-                        <div className="w-full">
-                            {/* Step 1: Record Audio */}
-                            <div className="mb-12 p-8 recording-card">
-                                <div className="flex items-center mb-4">
-                                    <div className="step-indicator">1</div>
-                                    <h2 className="text-2xl font-bold text-gray-800">Record Your Audio</h2>
+                        <h2 className="text-2xl font-bold text-white mb-3">Connect Your Wallet</h2>
+                        <p className="text-gray-400 mb-8 max-w-md mx-auto">To create and tokenize your audio recordings, you need to connect your cryptocurrency wallet first.</p>
+                        <div className="flex justify-center mb-6">
+                            <WalletConnect />
+                        </div>
+                        <p className="text-xs text-gray-500 max-w-sm mx-auto">By connecting your wallet, you agree to our Terms of Service and Privacy Policy.</p>
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        {/* Step 1: Record Audio */}
+                        <div className="bg-[var(--card-background)] border border-[var(--border-color)] rounded-xl p-6">
+                            <div className="flex items-center mb-4">
+                                <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-sm mr-3">1</div>
+                                <h2 className="text-xl font-bold text-white">Record Your Audio</h2>
+                            </div>
+                            <p className="text-gray-400 mb-6">Record your voice or audio using your device's microphone</p>
+                            
+                            {/* Recording interface with dark theme styling */}
+                            {!audioBlob ? (
+                                <div className="text-center py-8">
+                                    <button
+                                        onClick={isRecording ? stopRecording : startRecording}
+                                        disabled={!isConnected || !isMatching}
+                                        className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 transition-all ${
+                                            isRecording 
+                                                ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
+                                                : 'bg-blue-500 hover:bg-blue-600'
+                                        } ${(!isConnected || !isMatching) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                        {isRecording ? (
+                                            <Square className="w-8 h-8 text-white" />
+                                        ) : (
+                                            <Mic className="w-8 h-8 text-white" />
+                                        )}
+                                    </button>
+                                    <p className="text-white font-medium">
+                                        {isRecording ? `Recording... ${formatTime(recordingTime)}` : 'Click to start recording'}
+                                    </p>
+                                    <p className="text-gray-400 text-sm mt-2">
+                                        {isRecording ? 'Click the button again to stop' : 'Speak clearly into your microphone'}
+                                    </p>
                                 </div>
-                                <p className="text-gray-600 mb-8 pl-12">Record your voice or audio using your device's microphone</p>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-center mb-4">
+                                        <CheckCircle className="w-8 h-8 text-green-400 mr-2" />
+                                        <span className="text-white font-medium">Recording Complete!</span>
+                                    </div>
+                                    <div className="bg-[var(--sidebar-background)] p-4 rounded-lg">
+                                        <p className="text-gray-300 text-sm mb-2">Preview your audio:</p>
+                                        <audio controls src={audioUrl || ''} className="w-full mb-3" />
+                                        <div className="flex justify-between text-xs text-gray-400">
+                                            <span>Duration: {formatTime(recordingTime)}</span>
+                                            <span>Format: WAV</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-3">
+                                        <button 
+                                            onClick={() => {
+                                                setAudioBlob(null);
+                                                setAudioUrl(null);
+                                                setRecordingTime(0);
+                                            }}
+                                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center justify-center transition-colors"
+                                        >
+                                            <RefreshCw className="w-4 h-4 mr-2" />
+                                            Record Again
+                                        </button>
+                                        <button 
+                                            onClick={uploadAudio}
+                                            disabled={uploading}
+                                            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center justify-center disabled:opacity-50 transition-colors"
+                                        >
+                                            <Upload className="w-4 h-4 mr-2" />
+                                            {uploading ? 'Uploading...' : 'Upload Audio'}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Upload Progress */}
+                            {uploading && (
+                                <div className="mt-6 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <p className="text-sm font-medium text-blue-400">Uploading to IPFS...</p>
+                                        <span className="text-sm font-bold text-blue-400">{uploadProgress.toFixed(0)}%</span>
+                                    </div>
+                                    <div className="w-full bg-gray-700 rounded-full h-2">
+                                        <div 
+                                            className="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+                                            style={{ width: `${uploadProgress}%` }}
+                                        ></div>
+                                    </div>
+                                    <p className="text-xs mt-2 text-gray-400">
+                                        Your audio is being encrypted and uploaded to the decentralized storage network
+                                    </p>
+                                </div>
+                            )}
+                            
+                            {/* Upload Error */}
+                            {uploadError && (
+                                <div className="mt-4 bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                                    <div className="flex items-center">
+                                        <AlertCircle className="w-5 h-5 text-red-400 mr-3" />
+                                        <p className="text-sm text-red-400">
+                                            Upload failed: {uploadError}
+                                        </p>
+                                    </div>
+                                    <p className="text-xs text-red-500 mt-1 ml-8">Please try again or contact support if the issue persists.</p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* Step 2: Tokenize Audio */}
+                        {uploadedFile && (
+                            <div className="bg-[var(--card-background)] border border-[var(--border-color)] rounded-xl p-6">
+                                <div className="flex items-center mb-4">
+                                    <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-sm mr-3">2</div>
+                                    <h2 className="text-xl font-bold text-white">Tokenize Your Audio</h2>
+                                </div>
                                 
-                                <div className="flex flex-col items-center space-y-6 py-6">
-                                    {!audioBlob ? (
-                                        <div className="w-full max-w-md">
-                                            <div className="flex flex-col items-center">
-                                                <div className="record-button-container mb-5">
-                                                    <button
-                                                        onClick={isRecording ? stopRecording : startRecording}
-                                                        disabled={!isConnected || !isMatching}
-                                                        className={`record-button ${isRecording ? 'record-button-recording' : ''} ${(!isConnected || !isMatching) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                                    >
-                                                        {isRecording ? (
-                                                            <div className="flex flex-col items-center">
-                                                                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <rect x="6" y="6" width="12" height="12" rx="2" strokeWidth="2" />
-                                                                </svg>
-                                                                <span className="text-sm mt-1 font-medium">{formatTime(recordingTime)}</span>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="flex flex-col items-center">
-                                                                <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <circle cx="12" cy="12" r="10" strokeWidth="1.5" />
-                                                                    <circle cx="12" cy="12" r="4" fill="currentColor" />
-                                                                </svg>
-                                                                <span className="text-sm font-medium mt-1">Start</span>
-                                                            </div>
-                                                        )}
-                                                    </button>
-                                                </div>
-                                                <div className="bg-gray-50 px-5 py-3 rounded-lg border border-gray-200 shadow-sm">
-                                                    <p className="text-center text-gray-700 font-medium">
-                                                        {isRecording ? '🔴 Recording in progress... Click to stop' : 'Press the button to start recording'}
-                                                    </p>
-                                                    <p className="text-center text-sm text-gray-500 mt-2">
-                                                        {isRecording ? `Duration: ${formatTime(recordingTime)}` : 'Speak clearly into your microphone'}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="w-full max-w-md">
-                                            <div className="success-container">
-                                                <div className="flex items-center justify-center mb-5">
-                                                    <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 text-green-600 shadow-md">
-                                                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                        </svg>
-                                                    </span>
-                                                </div>
-                                                <p className="text-center text-xl font-semibold text-gray-800 mb-4">
-                                                    Recording Complete!
-                                                </p>
-                                                <div className="flex justify-center mb-6">
-                                                    <div className="audio-preview w-full">
-                                                        <p className="text-sm font-medium text-gray-700 mb-2">Preview your audio:</p>
-                                                        <audio controls src={audioUrl || ''} className="audio-controls" />
-                                                        <p className="text-sm text-gray-500 mt-3 flex items-center justify-between">
-                                                            <span>Duration: {formatTime(recordingTime)}</span>
-                                                            <span>Format: WAV</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-center space-x-4">
-                                                    <button 
-                                                        onClick={() => {
-                                                            setAudioBlob(null);
-                                                            setAudioUrl(null);
-                                                            setRecordingTime(0);
-                                                        }}
-                                                        className="btn-secondary px-5 py-3 flex-1"
-                                                    >
-                                                        <span className="flex items-center justify-center">
-                                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                            </svg>
-                                                            Record Again
-                                                        </span>
-                                                    </button>
-                                                    <button 
-                                                        onClick={uploadAudio}
-                                                        disabled={uploading}
-                                                        className="btn-primary px-5 py-3 flex-1 disabled:opacity-50"
-                                                    >
-                                                        <span className="flex items-center justify-center">
-                                                            {uploading ? (
-                                                                <>
-                                                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                                    </svg>
-                                                                    Uploading...
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                                                    </svg>
-                                                                    Upload Audio
-                                                                </>
-                                                            )}
-                                                        </span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    
-                                    {uploading && (
-                                        <div className="w-full max-w-md mt-6 bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <p className="text-sm font-medium text-blue-700">Uploading to IPFS...</p>
-                                                <span className="text-sm font-bold text-blue-700">{uploadProgress.toFixed(0)}%</span>
-                                            </div>
-                                            <div className="w-full bg-white rounded-full h-2.5 shadow-inner">
-                                                <div 
-                                                    className="bg-blue-600 h-2.5 rounded-full shadow-sm transition-all duration-300" 
-                                                    style={{ width: `${uploadProgress}%` }}
-                                                ></div>
-                                            </div>
-                                            <p className="text-xs mt-2 text-blue-600">
-                                                Your audio is being encrypted and uploaded to the decentralized storage network
+                                <div className="space-y-6">
+                                    {/* Success Message */}
+                                    <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 flex items-start">
+                                        <CheckCircle className="w-6 h-6 text-green-400 mr-3 mt-0.5" />
+                                        <div>
+                                            <p className="font-medium text-green-400">Audio uploaded successfully!</p>
+                                            <p className="text-sm mt-1 text-gray-300">
+                                                Your audio is now stored on IPFS and ready to be tokenized.
+                                                <a 
+                                                    href={`https://gateway.lighthouse.storage/ipfs/${uploadedFile.data.Hash}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="ml-1 text-blue-400 hover:text-blue-300 inline-flex items-center"
+                                                >
+                                                    Listen to file <ExternalLink className="w-3 h-3 ml-1" />
+                                                </a>
+                                            </p>
+                                            <p className="text-xs mt-2 text-gray-500 font-mono bg-[var(--sidebar-background)] px-3 py-1 rounded border border-[var(--border-color)] overflow-x-auto">
+                                                IPFS Hash: {uploadedFile.data.Hash}
                                             </p>
                                         </div>
-                                    )}
-                                    
-                                    {uploadError && (
-                                        <div className="w-full max-w-md mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                                            <div className="flex items-center">
-                                                <div className="shrink-0">
-                                                    <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                </div>
-                                                <p className="ml-3 text-sm text-red-600">
-                                                    Upload failed: {uploadError}
-                                                </p>
-                                            </div>
-                                            <p className="text-xs text-red-500 mt-1 ml-8">Please try again or contact support if the issue persists.</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            
-                            {/* Step 2: Tokenize Audio */}
-                            {uploadedFile && (
-                                <div className="mb-12 p-8 recording-card">
-                                    <div className="flex items-center mb-5">
-                                        <div className="step-indicator">2</div>
-                                        <h2 className="text-2xl font-bold text-gray-800">Tokenize Your Audio</h2>
                                     </div>
                                     
-                                    <div className="w-full max-w-lg mx-auto space-y-6">
-                                        <div className="p-5 bg-green-50 border border-green-200 rounded-lg mb-4 flex items-start">
-                                            <div className="shrink-0 mr-4">
-                                                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                </div>
+                                    {/* NFT Details Form */}
+                                    <div className="bg-[var(--sidebar-background)] p-6 rounded-lg border border-[var(--border-color)]">
+                                        <h3 className="text-lg font-semibold mb-4 text-white">NFT Details</h3>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-300 mb-1">Token Name*</label>
+                                                <input
+                                                    type="text"
+                                                    value={tokenName}
+                                                    onChange={(e) => setTokenName(e.target.value)}
+                                                    placeholder="My Sonic IP"
+                                                    className="w-full bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                                                />
                                             </div>
                                             <div>
-                                                <p className="font-medium text-green-800">
-                                                    Audio uploaded successfully!
-                                                </p>
-                                                <p className="text-sm mt-1 text-gray-600">
-                                                    Your audio is now stored on IPFS and ready to be tokenized.
-                                                    <a 
-                                                        href={`https://gateway.lighthouse.storage/ipfs/${uploadedFile.data.Hash}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="ml-1 text-blue-600 hover:underline"
-                                                    >
-                                                        Listen to file
-                                                    </a>
-                                                </p>
-                                                <p className="text-xs mt-2 text-gray-500 font-mono bg-white px-3 py-1 rounded border border-gray-200 overflow-x-auto">
-                                                    IPFS Hash: {uploadedFile.data.Hash}
-                                                </p>
+                                                <label className="block text-sm font-medium text-gray-300 mb-1">Description*</label>
+                                                <textarea
+                                                    value={tokenDescription}
+                                                    onChange={(e) => setTokenDescription(e.target.value)}
+                                                    placeholder="Describe your audio creation..."
+                                                    className="w-full bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                                                    rows={3}
+                                                ></textarea>
+                                                <p className="text-xs text-gray-500 mt-1">This description will be permanently stored on the blockchain.</p>
                                             </div>
                                         </div>
-                                        
-                                        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                                            <h3 className="text-lg font-semibold mb-4 text-gray-800">NFT Details</h3>
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Token Name*</label>
-                                                    <input
-                                                        type="text"
-                                                        value={tokenName}
-                                                        onChange={(e) => setTokenName(e.target.value)}
-                                                        placeholder="My Sonic IP"
-                                                        className="form-input"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Description*</label>
-                                                    <textarea
-                                                        value={tokenDescription}
-                                                        onChange={(e) => setTokenDescription(e.target.value)}
-                                                        placeholder="Describe your audio creation..."
-                                                        className="form-input"
-                                                        rows={3}
-                                                    ></textarea>
-                                                    <p className="text-xs text-gray-500 mt-1">This description will be permanently stored on the blockchain.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="pt-4">
-                                            <button
-                                                onClick={handleTokenize}
-                                                disabled={isMinting || !isConnected || !isMatching}
-                                                className="btn-primary w-full py-4 text-base font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                                            >
-                                                {isMinting ? (
-                                                    <div className="flex items-center justify-center space-x-2">
-                                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                        <span>Tokenizing...</span>
-                                                    </div>
-                                                ) : (
-                                                    'Tokenize & Store on Blockchain'
-                                                )}
-                                            </button>
-                                            
-                                            {mintError && (
-                                                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
-                                                    <p className="text-sm text-red-600 text-center">
-                                                        {mintError}
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                            
-                            {/* Step 3: View Stored Audio */}
-                            {storeSuccess && (
-                                <div className="mb-12 p-8 recording-card">
-                                    <div className="flex items-center mb-5">
-                                        <div className="step-indicator">3</div>
-                                        <h2 className="text-2xl font-bold text-gray-800">Audio Successfully Stored!</h2>
                                     </div>
                                     
-                                    <div className="w-full max-w-lg mx-auto">
-                                        <div className="success-container">
-                                            <div className="w-20 h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-md">
-                                                <svg className="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                </svg>
+                                    {/* Tokenize Button */}
+                                    <button
+                                        onClick={handleTokenize}
+                                        disabled={isMinting || !isConnected || !isMatching}
+                                        className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        {isMinting ? (
+                                            <div className="flex items-center justify-center space-x-2">
+                                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                <span>Tokenizing...</span>
                                             </div>
-                                            <h3 className="text-2xl font-semibold text-green-800 mb-3">
-                                                Sonic IP Successfully Created!
-                                            </h3>
-                                            <p className="text-gray-600 mb-6 text-lg">
-                                                Your audio has been tokenized and stored permanently on the blockchain
-                                            </p>
-                                            
-                                            <div className="flex items-center justify-center">
-                                                <div className="w-32 h-0.5 bg-gray-200"></div>
-                                                <div className="px-4 text-gray-400 text-sm">DETAILS</div>
-                                                <div className="w-32 h-0.5 bg-gray-200"></div>
-                                            </div>
-                                            
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 text-left">
-                                                <div className="bg-white p-4 rounded-lg border border-gray-200">
-                                                    <h4 className="font-medium text-gray-700 mb-2">NFT Info</h4>
-                                                    <div className="space-y-2">
-                                                        <p className="text-sm"><span className="text-gray-500">Name:</span> {tokenName || "Sonic IP Audio"}</p>
-                                                        <p className="text-sm"><span className="text-gray-500">Created:</span> {new Date().toLocaleDateString()}</p>
-                                                        <p className="text-sm"><span className="text-gray-500">Owner:</span> {address?.slice(0, 6)}...{address?.slice(-4)}</p>
-                                                    </div>
-                                                </div>
-                                                
-                                                {retrievedCid && (
-                                                    <div className="bg-white p-4 rounded-lg border border-gray-200">
-                                                        <h4 className="font-medium text-gray-700 mb-2">Storage Info</h4>
-                                                        <p className="text-sm mb-2"><span className="text-gray-500">Storage:</span> IPFS / Filecoin</p>
-                                                        <p className="text-xs font-mono bg-gray-50 p-2 rounded overflow-x-auto border border-gray-100 text-gray-600">
-                                                            {retrievedCid}
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            
-                                            {storedAudioUrl && (
-                                                <div className="mt-8 bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-                                                    <h4 className="font-medium text-gray-800 mb-3">
-                                                        Your tokenized audio:
-                                                    </h4>
-                                                    <audio controls src={storedAudioUrl} className="w-full audio-controls mb-2" />
-                                                    <div className="flex justify-between text-sm text-gray-500 mt-2">
-                                                        <a href={storedAudioUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 flex items-center">
-                                                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                            </svg>
-                                                            Open in new tab
-                                                        </a>
-                                                        <span>Permanently stored on IPFS</span>
-                                                    </div>
-                                                </div>
-                                            )}
-                                            
-                                            <div className="mt-8">
-                                                <button 
-                                                    onClick={() => window.location.href = '/profile'}
-                                                    className="btn-primary px-6 py-3"
-                                                >
-                                                    View in My Collection
-                                                </button>
+                                        ) : (
+                                            'Tokenize & Store on Blockchain'
+                                        )}
+                                    </button>
+                                    
+                                    {/* Mint Error */}
+                                    {mintError && (
+                                        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                                            <p className="text-sm text-red-400 text-center">{mintError}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Step 3: Success */}
+                        {storeSuccess && (
+                            <div className="bg-[var(--card-background)] border border-[var(--border-color)] rounded-xl p-6">
+                                <div className="flex items-center mb-4">
+                                    <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold text-sm mr-3">3</div>
+                                    <h2 className="text-xl font-bold text-white">Audio Successfully Stored!</h2>
+                                </div>
+                                
+                                <div className="text-center py-8">
+                                    <div className="w-20 h-20 mx-auto bg-green-500/20 rounded-full flex items-center justify-center mb-6">
+                                        <CheckCircle className="w-12 h-12 text-green-400" />
+                                    </div>
+                                    <h3 className="text-2xl font-semibold text-green-400 mb-3">
+                                        Sonic IP Successfully Created!
+                                    </h3>
+                                    <p className="text-gray-400 mb-6 text-lg">
+                                        Your audio has been tokenized and stored permanently on the blockchain
+                                    </p>
+                                    
+                                    {/* Details Grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 text-left">
+                                        <div className="bg-[var(--sidebar-background)] p-4 rounded-lg border border-[var(--border-color)]">
+                                            <h4 className="font-medium text-white mb-2">NFT Info</h4>
+                                            <div className="space-y-2">
+                                                <p className="text-sm text-gray-300"><span className="text-gray-500">Name:</span> {tokenName || "Sonic IP Audio"}</p>
+                                                <p className="text-sm text-gray-300"><span className="text-gray-500">Created:</span> {new Date().toLocaleDateString()}</p>
+                                                <p className="text-sm text-gray-300"><span className="text-gray-500">Owner:</span> {address?.slice(0, 6)}...{address?.slice(-4)}</p>
                                             </div>
                                         </div>
+                                        
+                                        {retrievedCid && (
+                                            <div className="bg-[var(--sidebar-background)] p-4 rounded-lg border border-[var(--border-color)]">
+                                                <h4 className="font-medium text-white mb-2">Storage Info</h4>
+                                                <p className="text-sm mb-2 text-gray-300"><span className="text-gray-500">Storage:</span> IPFS / Filecoin</p>
+                                                <p className="text-xs font-mono bg-[var(--card-background)] p-2 rounded overflow-x-auto border border-[var(--border-color)] text-gray-400">
+                                                    {retrievedCid}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Audio Player */}
+                                    {storedAudioUrl && (
+                                        <div className="mt-8 bg-[var(--sidebar-background)] rounded-lg border border-[var(--border-color)] p-4">
+                                            <h4 className="font-medium text-white mb-3">Your tokenized audio:</h4>
+                                            <audio controls src={storedAudioUrl} className="w-full mb-2" />
+                                            <div className="flex justify-between text-sm text-gray-400 mt-2">
+                                                <a href={storedAudioUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 flex items-center">
+                                                    <ExternalLink className="w-4 h-4 mr-1" />
+                                                    Open in new tab
+                                                </a>
+                                                <span>Permanently stored on IPFS</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {/* Action Button */}
+                                    <div className="mt-8">
+                                        <button 
+                                            onClick={() => window.location.href = '/profile'}
+                                            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                                        >
+                                            View in My Collection
+                                        </button>
                                     </div>
                                 </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </section>
-
-            {/* Footer */}
-            <Footer />
-        </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </DashboardLayout>
     );
 }

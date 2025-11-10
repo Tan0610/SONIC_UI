@@ -35,7 +35,7 @@ export const WalletConnect = () => {
                             if (!connected) {
                                 return (
                                     <button onClick={openConnectModal} type="button">
-                                        <div className="text-gray-900 font-funnel-display items-center inline-flex bg-white border border-gray-200 hover:border-gray-400 transition-colors focus:outline-none justify-center text-center w-full lg:px-8 lg:py-2 lg:text-xl px-8 py-2">
+                                        <div className="text-white font-medium items-center inline-flex bg-blue-600 hover:bg-blue-700 border border-blue-600 transition-colors focus:outline-none justify-center text-center px-4 py-2 rounded-lg text-sm">
                                             Connect Wallet
                                         </div>
                                     </button>
@@ -43,11 +43,26 @@ export const WalletConnect = () => {
                             }
                             if (chain.unsupported) {
                                 return (
-                                    <button onClick={openChainModal} className="text-gray-900 items-center inline-flex bg-white border border-gray-200 hover:border-gray-400 transition-colors focus:outline-none justify-center text-center w-full lg:px-8 lg:py-2 lg:text-xl px-8 py-2">
+                                    <button onClick={openChainModal} className="text-white items-center inline-flex bg-red-600 hover:bg-red-700 border border-red-600 transition-colors focus:outline-none justify-center text-center px-4 py-2 rounded-lg text-sm">
                                         Wrong network
                                     </button>
                                 );
                             }
+                            return (
+                                <div className="flex items-center space-x-3">
+                                    <div className="bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg px-3 py-2">
+                                        <span className="text-white text-sm font-medium">
+                                            {account.displayName}
+                                        </span>
+                                    </div>
+                                    <button 
+                                        onClick={openChainModal}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                                    >
+                                        {chain.name}
+                                    </button>
+                                </div>
+                            );
                         })()}
                     </div>
                 );
