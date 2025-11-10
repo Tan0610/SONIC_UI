@@ -414,33 +414,73 @@ export default function AudioRecorder() {
                                         <CheckCircle className="w-8 h-8 text-green-400 mr-2" />
                                         <span className="text-white font-medium">Recording Complete!</span>
                                     </div>
-                                    <div className="bg-[var(--sidebar-background)] p-4 rounded-lg">
-                                        <p className="text-gray-300 text-sm mb-2">Preview your audio:</p>
-                                        <audio controls src={audioUrl || ''} className="w-full mb-3" />
-                                        <div className="flex justify-between text-xs text-gray-400">
-                                            <span>Duration: {formatTime(recordingTime)}</span>
-                                            <span>Format: WAV</span>
+                                    <div className="bg-[var(--sidebar-background)] border border-[var(--border-color)] rounded-xl p-6">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h4 className="text-white font-medium">Preview your audio:</h4>
+                                            <div className="flex items-center space-x-2 text-xs text-gray-400">
+                                                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full">WAV</span>
+                                                <span>{formatTime(recordingTime)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Professional Audio Player */}
+                                        <div className="dark-audio-player">
+                                            {/* Audio Visualizer */}
+                                            <div className="audio-visualizer mb-3">
+                                                <div className="audio-bar"></div>
+                                                <div className="audio-bar"></div>
+                                                <div className="audio-bar"></div>
+                                                <div className="audio-bar"></div>
+                                                <div className="audio-bar"></div>
+                                                <div className="audio-bar"></div>
+                                                <div className="audio-bar"></div>
+                                            </div>
+                                            
+                                            <audio 
+                                                controls 
+                                                src={audioUrl || ''} 
+                                                className="w-full"
+                                            />
+                                            
+                                            {/* Audio Info */}
+                                            <div className="flex items-center justify-between mt-3 text-xs text-gray-400">
+                                                <div className="flex items-center space-x-2">
+                                                    <Play className="w-3 h-3" />
+                                                    <span>Ready to play</span>
+                                                </div>
+                                                <span>Stereo • 48kHz</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
+                                            <div className="flex items-center space-x-2">
+                                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                                <span>Recording quality: High (48kHz)</span>
+                                            </div>
+                                            <span>Size: ~{Math.round((recordingTime * 96) / 1024)}KB</span>
                                         </div>
                                     </div>
-                                    <div className="flex space-x-3">
+                                    <div className="flex space-x-3 mt-6">
                                         <button 
                                             onClick={() => {
                                                 setAudioBlob(null);
                                                 setAudioUrl(null);
                                                 setRecordingTime(0);
                                             }}
-                                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center justify-center transition-colors"
+                                            className="flex-1 bg-gray-700/50 hover:bg-gray-600 border border-gray-600 text-white px-6 py-3 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105"
                                         >
                                             <RefreshCw className="w-4 h-4 mr-2" />
-                                            Record Again
+                                            <span className="font-medium">Record Again</span>
                                         </button>
                                         <button 
                                             onClick={uploadAudio}
                                             disabled={uploading}
-                                            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center justify-center disabled:opacity-50 transition-colors"
+                                            className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-3 rounded-xl flex items-center justify-center disabled:opacity-50 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-orange-500/25"
                                         >
                                             <Upload className="w-4 h-4 mr-2" />
-                                            {uploading ? 'Uploading...' : 'Upload Audio'}
+                                            <span className="font-medium">
+                                                {uploading ? 'Uploading...' : 'Upload to IPFS'}
+                                            </span>
                                         </button>
                                     </div>
                                 </div>

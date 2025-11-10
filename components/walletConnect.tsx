@@ -10,6 +10,7 @@ export const WalletConnect = () => {
                 chain,
                 openChainModal,
                 openConnectModal,
+                openAccountModal,
                 authenticationStatus,
                 mounted,
             }) => {
@@ -50,11 +51,15 @@ export const WalletConnect = () => {
                             }
                             return (
                                 <div className="flex items-center space-x-3">
-                                    <div className="bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg px-3 py-2">
+                                    <button 
+                                        onClick={openAccountModal}
+                                        className="bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg px-3 py-2 hover:bg-gray-700 transition-colors"
+                                        title="Click to view account details and disconnect"
+                                    >
                                         <span className="text-white text-sm font-medium">
                                             {account.displayName}
                                         </span>
-                                    </div>
+                                    </button>
                                     <button 
                                         onClick={openChainModal}
                                         className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
